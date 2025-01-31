@@ -33,10 +33,6 @@ export const metadata: Metadata = {
 const RootLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
 
-  if (!session) {
-    redirect('/sign-in');
-  }
-
   after(async () => {
     if (!session?.user?.id) return;
 
