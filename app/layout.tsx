@@ -1,10 +1,15 @@
 import { ReactNode } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { SessionProvider } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
+import { after } from 'next/server';
+import { auth } from '@/auth';
 import localFont from 'next/font/local';
 import './globals.css';
-import { auth } from '@/auth';
+import { db } from '@/database/drizzle';
+import { users } from '@/database/schema';
+import { eq } from 'drizzle-orm';
 
 const ibmPlexSans = localFont({
   src: [
@@ -27,6 +32,23 @@ export const metadata: Metadata = {
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
+
+  if (!session) {
+    redirect('/sign-in');
+  }
+
+  after(async () => {
+    if (!session?.user?.id) return;
+
+    const user = await db.select().from(users).where(eq(users.id, session?.user?.id)).limit(1);
+
+    if (user[0].lastActivityDate === new Date().toISOString().slice(0, 10)) return;
+
+    await db
+      .update(users)
+      .set({ lastActivityDate: new Date().toISOString().slice(0, 10) })
+      .where(eq(users.id, session?.user?.id));
+  });
 
   return (
     <html lang='en'>
