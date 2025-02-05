@@ -1,19 +1,11 @@
 'use client';
 
 import { FIELD_NAMES, FIELD_TYPES } from '@/constants';
-import {
-  DefaultValues,
-  FieldValues,
-  Path,
-  SubmitHandler,
-  useForm,
-  UseFormReturn,
-} from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
 import { toast } from '@/hooks/use-toast';
-import { ZodType } from 'zod';
 import {
   Form,
   FormControl,
@@ -22,9 +14,17 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import ImageUpload from './ImageUpload';
+import { ZodType } from 'zod';
+import {
+  DefaultValues,
+  FieldValues,
+  Path,
+  SubmitHandler,
+  useForm,
+  UseFormReturn,
+} from 'react-hook-form';
+import FileUpload from './FileUpload';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 interface AuthFormProps<T extends FieldValues> {
   type: 'SIGN_IN' | 'SIGN_UP';
@@ -92,7 +92,14 @@ const AuthForm = <T extends FieldValues>({
                   </FormLabel>
                   <FormControl>
                     {field.name === 'universityCard' ? (
-                      <ImageUpload onFileChange={field.onChange} />
+                      <FileUpload
+                        type='image'
+                        accept='image/*'
+                        placeholder='Upload your ID'
+                        folder='ids'
+                        variant='dark'
+                        onFileChange={field.onChange}
+                      />
                     ) : (
                       <Input
                         required

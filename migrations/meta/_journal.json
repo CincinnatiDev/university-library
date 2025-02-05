@@ -8,6 +8,20 @@
       "when": 1738183955528,
       "tag": "0000_public_union_jack",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738678952154,
+      "tag": "0001_faithful_exiles",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738706444037,
+      "tag": "0002_yielding_mach_iv",
+      "breakpoints": true
     }
   ]
 }
